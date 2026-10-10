@@ -1,0 +1,10 @@
+Recorded command: env -u WT_SESSION bun test packages/tui/test/sixel-probe.test.ts packages/tui/test/terminal-appearance.test.ts packages/tui/test/windows-input-mode.test.ts packages/tui/test/glyph-protocol.test.ts packages/tui/test/startup-probe-leak.test.ts packages/tui/test/composer-native.test.ts packages/tui/test/status-line-native.test.ts
+Context: local merge of upstream main 1534f1a33954da73fc3c234cb0d146e6d6942f89 into the reviewed SIXEL branch.
+
+bun test v1.3.14 (0d9b296a)
+
+ 137 pass
+ 0 fail
+ 1255 expect() calls
+Ran 137 tests across 7 files. [3.39s]
+Wall time: 3.62 seconds

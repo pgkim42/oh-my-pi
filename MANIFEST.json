@@ -108,7 +108,34 @@
       "path": "evidence/review-followup.md",
       "bytes": 3431,
       "sha256": "c6801347e5ccae7338e61bac8c5e89696319bc8528a78680fffacda1d0054666"
+    },
+    {
+      "path": "evidence/merged-main-tests.txt",
+      "bytes": 589,
+      "sha256": "88dce6d68e0801e8b270d97019b8ad2c07afa5fae0380252d52e3673726dd8c7"
+    },
+    {
+      "path": "evidence/merged-main-check.txt",
+      "bytes": 453,
+      "sha256": "d52e600228a857ac46a26b1b398fe4a7ba353d0d0650a69dff07b413a3e0fff3"
+    },
+    {
+      "path": "evidence/merged-main-smoke.json",
+      "bytes": 305,
+      "sha256": "f64c82c37317e4291f2f6e19f2ab90fb03e1a1c28bc1ec4f4fd1b6cb3849ac8b"
+    },
+    {
+      "path": "evidence/05-merged-main-auto-sixel.png",
+      "bytes": 7845,
+      "sha256": "a37b631851e8afb776a26803101f8bb0bf07bff4f5dc0b6031cfe1c94af14fc7"
+    },
+    {
+      "path": "evidence/merged-main.md",
+      "bytes": 2619,
+      "sha256": "1b14d9d656452027905263a9b127051f7784280b6f09f2617bb477909fc421f6"
     }
   ],
-  "reviewFollowUpSourceCommit": "3917b2518db9adf135117a76c0024083bfb48cc3"
+  "reviewFollowUpSourceCommit": "3917b2518db9adf135117a76c0024083bfb48cc3",
+  "upstreamMergeSourceCommit": "7c7c10f77c8555e227071a6e9f921d8d678b7760",
+  "upstreamMergeParent": "1534f1a33954da73fc3c234cb0d146e6d6942f89"
 }

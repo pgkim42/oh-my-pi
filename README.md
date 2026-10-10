@@ -57,3 +57,9 @@ Investigation, implementation, automated verification and the patched visual smo
 
 The additional [screenshot](evidence/04-review-followup-auto-sixel.png), [smoke JSON](evidence/review-followup-smoke.json), [test output](evidence/review-followup-tests.txt), [package check output](evidence/review-followup-check.txt), and [incremental patch](evidence/review-followup.patch) are separate from the preserved initial observations. The complete suite was not rerun after this follow-up.
 
+## Upstream main synchronization
+
+[Merge verification](evidence/merged-main.md) records merge commit `7c7c10f77c8555e227071a6e9f921d8d678b7760` with upstream parent `1534f1a33954da73fc3c234cb0d146e6d6942f89`. Git merged the trees automatically, retaining both upstream's composer/status-line change and the reviewed SIXEL fix. Seven-file coverage passed 137 tests / 1,255 assertions, the package check passed, and the real native Windows Terminal SVG smoke succeeded with the protocol override unset.
+
+The [merge screenshot](evidence/05-merged-main-auto-sixel.png), [smoke JSON](evidence/merged-main-smoke.json), [test output](evidence/merged-main-tests.txt), and [package check](evidence/merged-main-check.txt) are additional sanitized observations. The initial full-suite results remain historical; no full-suite rerun is claimed for this merge.
+

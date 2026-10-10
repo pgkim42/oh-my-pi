@@ -1,0 +1,14 @@
+{
+  "platform": "win32",
+  "stdinTTY": true,
+  "stdoutTTY": true,
+  "activeOverride": null,
+  "initialProtocol": null,
+  "finalProtocol": "\u001bPq",
+  "elapsedMs": 464,
+  "success": true,
+  "imagePaintMs": 161,
+  "observedAfterGraphicsProbeTimeout": true,
+  "sixelRows": 1,
+  "emittedSixelChars": 4299
+}

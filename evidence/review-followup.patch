@@ -1,0 +1,133 @@
+diff --git a/docs/tui-core-renderer.md b/docs/tui-core-renderer.md
+index f144142..9e0b750 100644
+--- a/docs/tui-core-renderer.md
++++ b/docs/tui-core-renderer.md
+@@ -155,6 +155,8 @@ SIXEL discovery accepts either a positive XTSMGRAPHICS geometry reply or DA1
+ attribute 4. `ProcessTerminal.onSixelSupport` publishes and caches the DA1
+ advertisement while consuming the reply bytes and preserving sentinel ownership.
+ A missing DA1 attribute does not reject support reported by XTSMGRAPHICS.
++Selecting SIXEL from DA1 does not end a pending XTSMGRAPHICS query: its input
++consumer remains until the graphics reply arrives or the probe times out.
+ Explicit `PI_FORCE_IMAGE_PROTOCOL` choices, including `none`/`off`, take priority;
+ native TSP surfaces keep their own image transport.
+ 
+diff --git a/packages/tui/CHANGELOG.md b/packages/tui/CHANGELOG.md
+index 2216a21..99e14a1 100644
+--- a/packages/tui/CHANGELOG.md
++++ b/packages/tui/CHANGELOG.md
+@@ -4,7 +4,7 @@
+ 
+ ### Fixed
+ 
+-- Fixed SIXEL auto-detection on terminals that advertise graphics through DA1 attribute 4 but do not answer XTSMGRAPHICS, including native Windows Terminal; SVG figures and inline images no longer require `PI_FORCE_IMAGE_PROTOCOL=sixel` ([#15226](https://github.com/can1357/oh-my-pi/pull/15226) by [@pgkim42](https://github.com/pgkim42)).
++- Fixed SIXEL auto-detection on terminals that advertise graphics through DA1 attribute 4 but do not answer XTSMGRAPHICS, including native Windows Terminal; SVG figures and inline images no longer require `PI_FORCE_IMAGE_PROTOCOL=sixel`. Terminals that answer both queries keep consuming the pending graphics reply after DA1 enables SIXEL, preventing probe bytes from reaching application input ([#15226](https://github.com/can1357/oh-my-pi/pull/15226) by [@pgkim42](https://github.com/pgkim42)).
+ 
+ ## [18.8.8] - 2026-10-10
+ 
+diff --git a/packages/tui/src/terminal.ts b/packages/tui/src/terminal.ts
+index adf8533..eff7faa 100644
+--- a/packages/tui/src/terminal.ts
++++ b/packages/tui/src/terminal.ts
+@@ -1275,6 +1275,7 @@ export class ProcessTerminal implements Terminal {
+ 
+ 		// DA1 (Primary Device Attributes) response: \x1b[?...c
+ 		const da1ResponsePattern = /^\x1b\[\?[\d;]*c$/;
++		const da1SixelAttributePattern = /;4(?:;|c$)/u;
+ 
+ 		// Private CSI partial: \x1b[?<digits/semicolons>... — incomplete probe response
+ 		// that the StdinBuffer flushed before the terminator arrived (split across
+@@ -1420,7 +1421,7 @@ export class ProcessTerminal implements Terminal {
+ 			if (da1ResponsePattern.test(sequence)) {
+ 				// Publish graphics support without forwarding DA1 bytes to application
+ 				// input or changing ownership of the existing probe sentinel.
+-				const supportsSixel = /;4(?:;|c$)/u.test(sequence);
++				const supportsSixel = da1SixelAttributePattern.test(sequence);
+ 				if (supportsSixel !== this.#sixelSupport) {
+ 					this.#sixelSupport = supportsSixel;
+ 					for (const callback of this.#sixelSupportCallbacks) {
+diff --git a/packages/tui/src/tui.ts b/packages/tui/src/tui.ts
+index 685a519..63ec6c6 100644
+--- a/packages/tui/src/tui.ts
++++ b/packages/tui/src/tui.ts
+@@ -1487,7 +1487,9 @@ export class TUI extends Container {
+ 		this.terminal.onSixelSupport?.(supported => {
+ 			if (!supported || this.#stopped || this.#nativeLive || this.terminal.tspExpected) return;
+ 			if (isImageProtocolForced()) return;
+-			this.#finishSixelProbe(true);
++			// Keep consuming an already-requested XTSMGRAPHICS reply until it
++			// arrives or times out, even though DA1 has established support.
++			this.#enableSixelProtocol();
+ 		});
+ 		this.terminal.onTspHello?.(hello => this.#onTspHello(hello));
+ 		this.terminal.start(
+@@ -2444,7 +2446,11 @@ export class TUI extends Container {
+ 
+ 	#finishSixelProbe(supported: boolean): void {
+ 		this.#clearSixelProbeState();
+-		if (!supported || TERMINAL.imageProtocol) return;
++		if (supported) this.#enableSixelProtocol();
++	}
++
++	#enableSixelProtocol(): void {
++		if (TERMINAL.imageProtocol) return;
+ 
+ 		setTerminalImageProtocol(ImageProtocol.Sixel);
+ 		this.#queryCellSize();
+diff --git a/packages/tui/test/sixel-probe.test.ts b/packages/tui/test/sixel-probe.test.ts
+index e16ee0d..ed2cec1 100644
+--- a/packages/tui/test/sixel-probe.test.ts
++++ b/packages/tui/test/sixel-probe.test.ts
+@@ -202,6 +202,53 @@ describe("ProcessTerminal DA1 SIXEL detection", () => {
+ 
+ 		expect(TERMINAL.imageProtocol).toBe(ImageProtocol.Sixel);
+ 		expect(received).toEqual(["x"]);
++		vi.advanceTimersByTime(251);
++		expect(TERMINAL.imageProtocol).toBe(ImageProtocol.Sixel);
++	});
++
++	it("consumes the graphics reply after DA1 has already enabled SIXEL", () => {
++		harness = createProcessTerminalRenderHarness(80, 24, { conpty: false });
++		const received: string[] = [];
++		harness.tui.addInputListener(data => {
++			received.push(data);
++		});
++
++		process.stdin.emit("data", "\x1b[?62;4;22;28c");
++		expect(TERMINAL.imageProtocol).toBe(ImageProtocol.Sixel);
++		process.stdin.emit("data", `${SIXEL_SUPPORTED_REPLY}x`);
++
++		expect(received).toEqual(["x"]);
++		expect(TERMINAL.imageProtocol).toBe(ImageProtocol.Sixel);
++	});
++
++	it("consumes a graphics reply split across the stdin flush deadline after DA1", () => {
++		harness = createProcessTerminalRenderHarness(80, 24, { conpty: false });
++		const received: string[] = [];
++		harness.tui.addInputListener(data => {
++			received.push(data);
++		});
++
++		process.stdin.emit("data", "\x1b[?62;4;22;28c");
++		process.stdin.emit("data", "\x1b[?2;0;1692");
++		vi.advanceTimersByTime(51);
++		expect(received).toEqual([]);
++		process.stdin.emit("data", ";432Sx");
++
++		expect(received).toEqual(["x"]);
++		expect(TERMINAL.imageProtocol).toBe(ImageProtocol.Sixel);
++	});
++
++	it("consumes a negative graphics reply without revoking DA1-advertised support", () => {
++		harness = createProcessTerminalRenderHarness(80, 24, { conpty: false });
++		const received: string[] = [];
++		harness.tui.addInputListener(data => {
++			received.push(data);
++		});
++
++		process.stdin.emit("data", "\x1b[?62;4;22;28c\x1b[?2;3;0Sx");
++
++		expect(received).toEqual(["x"]);
++		expect(TERMINAL.imageProtocol).toBe(ImageProtocol.Sixel);
+ 	});
+ 
+ 	it("reassembles a DA1 advertisement split beyond the stdin flush deadline", () => {

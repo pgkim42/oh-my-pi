@@ -78,6 +78,37 @@
       "path": "evidence/03-patched-auto-sixel.png",
       "bytes": 8152,
       "sha256": "005392a58947116ce3d0d1b1fa228f7fb395fcdb5bc6551250828061613d25a7"
+    },
+    {
+      "path": "evidence/review-followup-tests.txt",
+      "bytes": 486,
+      "sha256": "0624c29b0e47f87f32f5734eeac5f94f39eb347f05e616e109326c22aa0f1c34"
+    },
+    {
+      "path": "evidence/review-followup-check.txt",
+      "bytes": 447,
+      "sha256": "d277971cbeaa2cec21e64a54fbc2fa08818e00308bdb75677c9ded67f87194d9"
+    },
+    {
+      "path": "evidence/review-followup-smoke.json",
+      "bytes": 305,
+      "sha256": "4473ce545c14393717744b38a9635712d507de4099546eae21fde82472d19e9c"
+    },
+    {
+      "path": "evidence/04-review-followup-auto-sixel.png",
+      "bytes": 7910,
+      "sha256": "6e58ddbabc562215effeea32234318098e6ab7aff88761a3d5e6bcff4bad2fa3"
+    },
+    {
+      "path": "evidence/review-followup.patch",
+      "bytes": 6214,
+      "sha256": "cd92e6a70c28522ca2b25a7014a2dba726637d434c9db36ef652808993923610"
+    },
+    {
+      "path": "evidence/review-followup.md",
+      "bytes": 3431,
+      "sha256": "c6801347e5ccae7338e61bac8c5e89696319bc8528a78680fffacda1d0054666"
     }
-  ]
+  ],
+  "reviewFollowUpSourceCommit": "3917b2518db9adf135117a76c0024083bfb48cc3"
 }

@@ -49,4 +49,11 @@ Investigation, implementation, automated verification and the patched visual smo
 
 [evidence/changes.patch](evidence/changes.patch) is the original reviewed local patch before adding the eventual PR link and contributor attribution to CHANGELOG. The live PR diff is authoritative for final source changes.
 
-[MANIFEST.json](MANIFEST.json) contains SHA-256 digests and byte sizes of the 13 evidence artifacts, allowing comparison with the reviewed local bundle. It does not contain the private ZIP.
+[MANIFEST.json](MANIFEST.json) contains SHA-256 digests and byte sizes of the initial and follow-up evidence artifacts, allowing comparison with the reviewed local files. It does not contain the private ZIP.
+
+## Review follow-up
+
+[Follow-up report](evidence/review-followup.md) documents source commit `3917b2518db9adf135117a76c0024083bfb48cc3`, addressing both reviewers' pending-XTSMGRAPHICS lifetime finding and the regex-hoisting nit. The recorded five-file related suite passed 109 tests / 1,144 assertions, the package check passed, and a new real native Windows Terminal smoke displayed SVG OK with the protocol override unset and SIXEL retained beyond the graphics timeout.
+
+The additional [screenshot](evidence/04-review-followup-auto-sixel.png), [smoke JSON](evidence/review-followup-smoke.json), [test output](evidence/review-followup-tests.txt), [package check output](evidence/review-followup-check.txt), and [incremental patch](evidence/review-followup.patch) are separate from the preserved initial observations. The complete suite was not rerun after this follow-up.
+

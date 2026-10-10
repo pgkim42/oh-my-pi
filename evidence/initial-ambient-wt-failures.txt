@@ -1,0 +1,102 @@
+Recorded command: bun test packages/tui/test/sixel-probe.test.ts packages/tui/test/terminal-appearance.test.ts packages/tui/test/windows-input-mode.test.ts packages/tui/test/glyph-protocol.test.ts packages/tui/test/startup-probe-leak.test.ts
+Context: initial related-suite run inheriting WT_SESSION. Only the first timer-count failure was separately baseline-confirmed; this file does not assert that all six were independently baseline-tested.
+
+bun test v1.3.14 (0d9b296a)
+
+packages\tui\test\terminal-appearance.test.ts:
+422 | 		for (let i = 0; i < 8; i++) process.stdin.emit("data", "\x1b[?1;2c");
+423 | 		const directQueriesBeforeRefresh = queryCount();
+424 | 		const directSentinelsBeforeRefresh = sentinelCount();
+425 | 
+426 | 		terminal.refreshAppearance?.();
+427 | 		expect(vi.getTimerCount()).toBe(1);
+                                   ^
+error: expect(received).toBe(expected)
+
+Expected: 1
+Received: 2
+
+      at <anonymous> (<checkout>\packages\tui\test\terminal-appearance.test.ts:427:30)
+(fail) ProcessTerminal OSC 11 appearance detection > cancels a pending tmux appearance cache read during teardown [2.74ms]
+533 | 		// Step 4: Complete both initial DA1 sentinels — keyboard probe first, then OSC 11.
+534 | 		// The keyboard sentinel doesn't kick the queued OSC 11 query; the OSC 11 one does.
+535 | 		process.stdin.emit("data", "\x1b[?1;2c");
+536 | 		process.stdin.emit("data", "\x1b[?1;2c");
+537 | 
+538 | 		expect(queryCount()).toBe(2);
+                             ^
+error: expect(received).toBe(expected)
+
+Expected: 2
+Received: 3
+
+      at <anonymous> (<checkout>\packages\tui\test\terminal-appearance.test.ts:538:24)
+(fail) ProcessTerminal OSC 11 appearance detection > DA1 from old query does not cancel new queued query [2.51ms]
+660 | 		const { terminal, writes } = setupTerminal({ conpty: true });
+661 | 		writes.length = 0;
+662 | 		process.stdin.emit("data", "\x1b[?0u");
+663 | 
+664 | 		expect(writes).toContain("\x1b[>1u");
+665 | 		expect(writes).not.toContain("\x1b[>5u");
+                           ^
+error: expect(received).not.toContain(expected)
+
+Expected to not contain: "\u001B[>5u"
+Received: [ "\u001B[>4;0m", "\u001B[>5u", "\u001B[>4;0m", "\u001B[>5u", "\u001B[>1u" ]
+
+      at <anonymous> (<checkout>\packages\tui\test\terminal-appearance.test.ts:665:22)
+(fail) ProcessTerminal OSC 11 appearance detection > uses disambiguation-only keyboard reporting on ConPTY [3.02ms]
+670 | 		const { terminal, writes } = setupTerminal({ conpty: true });
+671 | 		writes.length = 0;
+672 | 		process.stdin.emit("data", "\x1b[?3u");
+673 | 
+674 | 		expect(writes).toContain("\x1b[>3u");
+675 | 		expect(writes).not.toContain("\x1b[>7u");
+                           ^
+error: expect(received).not.toContain(expected)
+
+Expected to not contain: "\u001B[>7u"
+Received: [ "\u001B[>7u", "\u001B[>7u", "\u001B[>3u", "\u001B[>3u" ]
+
+      at <anonymous> (<checkout>\packages\tui\test\terminal-appearance.test.ts:675:22)
+(fail) ProcessTerminal OSC 11 appearance detection > avoids alternate-key reporting on ConPTY while preserving parent event reporting [2.13ms]
+697 | 
+698 | 		// Simulate kitty-capable terminal reply (level >=1).
+699 | 		process.stdin.emit("data", "\x1b[?1u");
+700 | 
+701 | 		const pushes = writes.filter(w => w === "\x1b[>5u" || w === "\x1b[>7u" || w === "\x1b[>31u").length;
+702 | 		expect(pushes).toBe(1);
+                       ^
+error: expect(received).toBe(expected)
+
+Expected: 1
+Received: 3
+
+      at <anonymous> (<checkout>\packages\tui\test\terminal-appearance.test.ts:702:18)
+(fail) ProcessTerminal OSC 11 appearance detection > shutdown balances the single kitty push performed on detection [2.13ms]
+807 | 	it("rearms bracketed paste on input so a subsequent multiline paste stays one input", () => {
+808 | 		const { terminal, writes, received } = setup();
+809 | 		process.stdin.emit("data", "\x1b[?2004;1$y");
+810 | 		writes.length = 0;
+811 | 		process.stdin.emit("data", "x");
+812 | 		expect(writes).toEqual(["\x1b[?2004h"]);
+                       ^
+error: expect(received).toEqual(expected)
+
+@@ -2,3 +2,5 @@
+    "[?2004h",
++   "[?2004h",
++   "[?2004h",
++   "[?2004h",
+  ]
+
+- Expected  - 0
++ Received  + 3
+
+      at <anonymous> (<checkout>\packages\tui\test\terminal-appearance.test.ts:812:18)
+(fail) ProcessTerminal DECRQM + in-band resize (DEC 2026/2048) > rearms bracketed paste on input so a subsequent multiline paste stays one input [3.87ms]
+
+ 100 pass
+ 6 fail
+ 1125 expect() calls
+Ran 106 tests across 5 files. [3.35s]

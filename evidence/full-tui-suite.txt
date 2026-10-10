@@ -1,0 +1,126 @@
+Recorded command: env -u WT_SESSION bun test packages/tui/test
+Sanitization: local filesystem paths removed. Original complete captured output follows.
+
+bun test v1.3.14 (0d9b296a)
+
+packages\tui\test\custom-editor.test.ts:
+514 | 	it("strips `file://` URLs to the local filesystem path before loading the image", () => {
+515 | 		// macOS / Ghostty / iTerm2 sometimes forward the pasteboard's
+516 | 		// `public.file-url` representation when the user does Finder→Copy
+517 | 		// then Cmd+V. Without decoding, `loadImageInput` would try to read a
+518 | 		// literal `file:///…` path and fail.
+519 | 		expect(extractBracketedImagePastePaths(bracketedPaste("file:///Users/me/Pictures/photo.png"))).toEqual([
+                                                                                                       ^
+error: expect(received).toEqual(expected)
+
+  [
+-   "/Users/me/Pictures/photo.png",
++   "file:///Users/me/Pictures/photo.png",
+  ]
+
+- Expected  - 1
++ Received  + 1
+
+      at <anonymous> (<checkout>\packages\tui\test\custom-editor.test.ts:519:98)
+(fail) CustomEditor bracketed path paste > strips `file://` URLs to the local filesystem path before loading the image [2.25ms]
+520 | 			"/Users/me/Pictures/photo.png",
+521 | 		]);
+522 | 	});
+523 | 
+524 | 	it("percent-decodes spaces inside `file://` URLs", () => {
+525 | 		expect(extractBracketedImagePastePaths(bracketedPaste("file:///Users/me/My%20Pictures/photo.png"))).toEqual([
+                                                                                                            ^
+error: expect(received).toEqual(expected)
+
+  [
+-   "/Users/me/My Pictures/photo.png",
++   "file:///Users/me/My%20Pictures/photo.png",
+  ]
+
+- Expected  - 1
++ Received  + 1
+
+      at <anonymous> (<checkout>\packages\tui\test\custom-editor.test.ts:525:103)
+(fail) CustomEditor bracketed path paste > percent-decodes spaces inside `file://` URLs [0.45ms]
+634 | 		expect(extractImagePathFromText("")).toBeUndefined();
+635 | 		expect(extractImagePathFromText("   ")).toBeUndefined();
+636 | 	});
+637 | 
+638 | 	it("decodes a `file://` URL to its filesystem path", () => {
+639 | 		expect(extractImagePathFromText("file:///Users/me/Pictures/photo.png")).toBe("/Users/me/Pictures/photo.png");
+                                                                                ^
+error: expect(received).toBe(expected)
+
+Expected: "/Users/me/Pictures/photo.png"
+Received: "file:///Users/me/Pictures/photo.png"
+
+      at <anonymous> (<checkout>\packages\tui\test\custom-editor.test.ts:639:75)
+(fail) extractImagePathFromText (issue #3506) > decodes a `file://` URL to its filesystem path [0.30ms]
+
+packages\tui\test\resize-anchor-recovery.test.ts:
+shrink-to-content: reported 6 actual 6
+shrink-into-content: reported 6 actual 4
+0 "hist-2"
+1 "hist-3"
+2 "hist-4"
+3 "hist-5"
+4 "VIEW-TOP"
+5 "VIEW-MID"
+6 "VIEW-BOT"
+combined: reported 7 actual 4 recovered 4
+0 "hist-2"
+1 "hist-3"
+2 "hist-4"
+3 "hist-5"
+4 "VIEW-TOP-zzzzzzzzzzzzzzzzzzz"
+5 "zzzzzz"
+6 "VIEW-MID"
+7 "VIEW-BOT"
+width-grow: reported 5 actual 5 recovered 5
+drag: reported 7 actual 4 recovered 4
+0 "hist-2"
+1 "hist-3"
+2 "hist-4"
+3 "hist-5"
+4 "VIEW-TOP-zzzzzzzzzzzzzzzzzzz"
+5 "zzzzzz"
+6 "VIEW-MID"
+7 "VIEW-BOT"
+
+packages\tui\test\usage-native-describe.test.ts:
+265 | 		};
+266 | 		// No clock from the terminal keeps the log-style stamp.
+267 | 		expect(shown(undefined).line).toContain('"18:05 · ');
+268 | 		expect(shown(undefined).title).toBe("2026-01-01 18:05:09");
+269 | 		const twelve = shown(true);
+270 | 		expect(twelve.line).toMatch(/"0?6:05\s?pm · /i);
+                            ^
+error: expect(received).toMatch(expected)
+
+Expected substring or pattern: /"0?6:05\s?pm \u00B7 /i
+Received: "{\"k\":\"text\",\"p\":{\"spans\":[{\"t\":\"오후 06:05 · in 100 · out 500\",\"s\":\"dim\"}]}}"
+
+      at <anonymous> (<checkout>\packages\tui\test\usage-native-describe.test.ts:270:23)
+(fail) createUsageRowBlock describe > shows the turn's time on the terminal's clock, re-describing when it changes [1.03ms]
+
+packages\tui\test\native\transcript-redesign-native.test.ts:
+196 | 			harness = await TspHarness.start(undefined, { hour12 });
+197 | 			harness.tui.addChild(new UserMessageComponent("Fix the build", { timestamp: at }));
+198 | 			await harness.render();
+199 | 			const time = harness.find(node => node.p?.role === "omp.user.time");
+200 | 			expect(texts(time)).toMatch(shown);
+201 | 			expect(String(prop(time, "title"))).toMatch(hour12 ? /pm/i : /18:05/);
+                                             ^
+error: expect(received).toMatch(expected)
+
+Expected substring or pattern: /18:05/
+Received: "2026. 1. 1. 18시 5분 0초"
+
+      at <anonymous> (<checkout>\packages\tui\test\native\transcript-redesign-native.test.ts:201:40)
+(fail) native transcript redesign > shows a user message's time on the terminal's clock [2.20ms]
+
+ 3553 pass
+ 4 skip
+ 5 fail
+ 56739 expect() calls
+Ran 3562 tests across 281 files. [48.44s]

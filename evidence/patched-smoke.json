@@ -1,0 +1,13 @@
+{
+  "platform": "win32",
+  "stdinTTY": true,
+  "stdoutTTY": true,
+  "inheritedOverride": null,
+  "activeOverride": null,
+  "initialProtocol": null,
+  "finalProtocol": "\u001bPq",
+  "elapsedMs": 156,
+  "success": true,
+  "sixelRows": 1,
+  "emittedSixelChars": 4299
+}

@@ -1,0 +1,10 @@
+Recorded command: bun run --cwd packages/tui check
+Output exported from the original background-job completion. No root bun check claim.
+
+$ oxlint . && oxfmt --check --no-error-on-unmatched-pattern 'src/**/*.{ts,tsx}' '{test,bench,examples,scripts}/**/*.ts' '*.ts' && bun run check:types
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 112ms on 727 files using 12 threads.
+$ tsgo -p tsconfig.json --noEmit
+Wall time: 6.70 seconds

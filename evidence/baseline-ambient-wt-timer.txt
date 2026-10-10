@@ -1,0 +1,31 @@
+Recorded command: bun test --preload <temporary-baseline>/baseline-preload.ts packages/tui/test/terminal-appearance.test.ts -t "cancels a pending tmux appearance cache read during teardown"
+Context: original ProcessTerminal source loaded from the base commit; inherited WT_SESSION retained.
+
+bun test v1.3.14 (0d9b296a)
+
+packages\tui\test\terminal-appearance.test.ts:
+422 | 		for (let i = 0; i < 8; i++) process.stdin.emit("data", "\x1b[?1;2c");
+423 | 		const directQueriesBeforeRefresh = queryCount();
+424 | 		const directSentinelsBeforeRefresh = sentinelCount();
+425 | 
+426 | 		terminal.refreshAppearance?.();
+427 | 		expect(vi.getTimerCount()).toBe(1);
+                                   ^
+error: expect(received).toBe(expected)
+
+Expected: 1
+Received: 2
+
+      at <anonymous> (<checkout>\packages\tui\test\terminal-appearance.test.ts:427:30)
+(fail) ProcessTerminal OSC 11 appearance detection > cancels a pending tmux appearance cache read during teardown [9.47ms]
+
+ 0 pass
+ 53 filtered out
+ 1 fail
+ 1 expect() calls
+Ran 1 test across 1 file. [189.00ms]
+
+
+Wall time: 0.34 seconds
+
+Command exited with code 1

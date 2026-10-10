@@ -1,0 +1,61 @@
+{
+  "platform": "win32",
+  "stdinTTY": true,
+  "stdoutTTY": true,
+  "probes": [
+    {
+      "name": "DSR-before",
+      "queryHex": "1b5b366e",
+      "waitMs": 1000,
+      "response": "\u001b[2;1R",
+      "chunks": [
+        {
+          "ms": 8,
+          "hex": "1b5b323b3152",
+          "text": "\u001b[2;1R"
+        }
+      ]
+    },
+    {
+      "name": "XTSMGRAPHICS-geometry",
+      "queryHex": "1b5b3f323b313b3053",
+      "waitMs": 2000,
+      "response": "",
+      "chunks": []
+    },
+    {
+      "name": "DA1",
+      "queryHex": "1b5b63",
+      "waitMs": 1000,
+      "response": "\u001b[?61;4;6;7;14;21;22;23;24;28;32;42;52c",
+      "chunks": [
+        {
+          "ms": 1,
+          "hex": "1b5b3f36313b343b363b373b31343b32313b32323b32333b32343b32383b33323b34323b353263",
+          "text": "\u001b[?61;4;6;7;14;21;22;23;24;28;32;42;52c"
+        }
+      ]
+    },
+    {
+      "name": "XTSMGRAPHICS-palette",
+      "queryHex": "1b5b3f313b313b3053",
+      "waitMs": 2000,
+      "response": "",
+      "chunks": []
+    },
+    {
+      "name": "DSR-after",
+      "queryHex": "1b5b366e",
+      "waitMs": 1000,
+      "response": "\u001b[2;1R",
+      "chunks": [
+        {
+          "ms": 0,
+          "hex": "1b5b323b3152",
+          "text": "\u001b[2;1R"
+        }
+      ]
+    }
+  ],
+  "wtSessionPresent": true
+}

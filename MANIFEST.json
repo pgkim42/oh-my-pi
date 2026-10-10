@@ -1,0 +1,83 @@
+{
+  "purpose": "Sanitized verification evidence for native Windows DA1-based SIXEL discovery",
+  "upstream": "can1357/oh-my-pi",
+  "baseCommit": "db87bd637422aca14ee7744259802296fe92cd1e",
+  "installedRelease": "18.8.7",
+  "checkoutManifestVersion": "18.8.8",
+  "nativeAddonVersion": "18.8.7",
+  "privacy": {
+    "localAccountPaths": "removed",
+    "sessionIdentifier": "removed; presence boolean retained",
+    "screenshotStatusBar": "cropped",
+    "imageMetadata": "removed",
+    "nativeBinaries": "excluded",
+    "fullSessionTranscript": "excluded"
+  },
+  "files": [
+    {
+      "path": "evidence/terminal-probe.json",
+      "bytes": 1312,
+      "sha256": "904927210428a30c4621fb2ee6dcbdc2c6e0b5f246e8c93b26694fc1ea242958"
+    },
+    {
+      "path": "evidence/patched-smoke.json",
+      "bytes": 266,
+      "sha256": "b8c2556f235d9401964c141d2241a197aeac78ada4819d3b5a5ade652ee8a161"
+    },
+    {
+      "path": "evidence/changes.patch",
+      "bytes": 11028,
+      "sha256": "4bb8818bbe5767bb5ca6412fb6dfda77292b45443e16e1c8eff8b054940744a5"
+    },
+    {
+      "path": "evidence/regression-before.txt",
+      "bytes": 1011,
+      "sha256": "bc7ebec8e7776cafc07ee63be9180d4d69bb8c288896f77423f4bf62951882d1"
+    },
+    {
+      "path": "evidence/related-tests-after.txt",
+      "bytes": 531,
+      "sha256": "49031654569d43b0e2356895b65227288ce7fde5113d0306ef71c448cbd926c4"
+    },
+    {
+      "path": "evidence/tui-check.txt",
+      "bytes": 460,
+      "sha256": "d4e58a836e3969994e148e72913b8dbfd461aea9ef88e052f6110d0462587756"
+    },
+    {
+      "path": "evidence/full-tui-suite.txt",
+      "bytes": 4914,
+      "sha256": "e57ef2a689dc055d88c2b11cdcd03097b472bc84d88bab2b3ea7a45fdef6bdc5"
+    },
+    {
+      "path": "evidence/baseline-existing-failures.txt",
+      "bytes": 4721,
+      "sha256": "9395eec4046b959bbee95ce13a1e8b03940f321f3ea2e83f15f770aa0d2251a8"
+    },
+    {
+      "path": "evidence/initial-ambient-wt-failures.txt",
+      "bytes": 4469,
+      "sha256": "3600b4be5d82b207ed2cc6dc9dc0a0ce765fd86297b8ac7a3fb9b1ce5f9efac1"
+    },
+    {
+      "path": "evidence/baseline-ambient-wt-timer.txt",
+      "bytes": 1111,
+      "sha256": "c8cb79bc443ec5ce977e65e4d0d36ba41c89ece3594f45db26109510745f9f4e"
+    },
+    {
+      "path": "evidence/01-original-svg-source-fallback.png",
+      "bytes": 130939,
+      "sha256": "e93d1b00c5d32fe86405dcb99fb6d0d1f7e579d6580fc507b8a16a76849b04fe"
+    },
+    {
+      "path": "evidence/02-forced-sixel-workaround.png",
+      "bytes": 41368,
+      "sha256": "c097a5c51165075cf28ffd6fd4b1962ca3411c5eb16d4a84ef73fd2c86bdd4fd"
+    },
+    {
+      "path": "evidence/03-patched-auto-sixel.png",
+      "bytes": 8152,
+      "sha256": "005392a58947116ce3d0d1b1fa228f7fb395fcdb5bc6551250828061613d25a7"
+    }
+  ]
+}
